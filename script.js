@@ -49,9 +49,19 @@ function initTimeline() {
     const stepDiv = document.createElement('div');
     stepDiv.className = 'step';
 
+    const header = document.createElement('div');
+    header.className = 'step-header';
+
     const title = document.createElement('h2');
     title.textContent = item.step;
-    stepDiv.appendChild(title);
+    header.appendChild(title);
+
+    const btn = document.createElement('button');
+    btn.className = 'toggle-btn';
+    btn.textContent = '+';
+    header.appendChild(btn);
+
+    stepDiv.appendChild(header);
 
     const content = document.createElement('div');
     content.className = 'content';
@@ -62,8 +72,9 @@ function initTimeline() {
     `;
     stepDiv.appendChild(content);
 
-    stepDiv.addEventListener('click', () => {
+    btn.addEventListener('click', () => {
       stepDiv.classList.toggle('active');
+      btn.textContent = stepDiv.classList.contains('active') ? '-' : '+';
     });
 
     container.appendChild(stepDiv);

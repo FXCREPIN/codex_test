@@ -3,6 +3,8 @@
 Dépôt de test pour visualiser les processus de l'entreprise.
 
 Une version interactive de la frise est disponible dans le fichier `index.html`.
+Chaque étape peut être dépliée en cliquant sur le bouton "+" pour
+afficher qui est responsable, l'action menée et les documents associés.
 
 ## Frise chronologique des processus
 
