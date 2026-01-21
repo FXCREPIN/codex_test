@@ -1,18 +1,62 @@
-# codex_test
+# MVP Conseils de classe & quorum
 
-Dépôt de test pour visualiser les processus de l'entreprise.
+Application interne (FR) pour suivre la présence des professeurs aux conseils de classe et garantir un quorum minimal de 70%.
 
-Une version interactive de la frise est disponible dans le fichier `index.html`.
+## Stack
+- Next.js + TypeScript + Tailwind
+- Prisma + SQLite
+- NextAuth (credentials)
+- Zod pour la validation
 
-## Frise chronologique des processus
+## Installation
+```bash
+npm install
+cp .env.example .env
+```
 
-| Étape | Qui ? | Action | Documents |
-|-------|-------|--------|-----------|
-| Phase commerciale et appels d'offres | Équipe commerciale | Répondre aux devis et appels d'offres, rédiger le mémoire technique, chiffrer le projet | Devis, CCAP, CCTP, mémoire technique |
-| Gestion de projet | Conducteur de travaux | Prendre en main l'affaire, relire les documents, établir le planning et les documents de suivi | CCAP, CCTP, mémoire technique, plans de sécurité |
-| Bureau d'étude | Bureau d'étude | Réaliser les calculs et le dimensionnement, produire les plans pour validation, fabrication et pose, constituer le DOE | CCTP, plans, notes de calcul, fiches techniques, certificats |
-| Production en atelier | Atelier | Fabriquer et assembler les ouvrages selon les plans | Dossier de plans |
-| Chantier et pose | Équipe chantier | Organiser le transport, poser les ouvrages, gérer le matériel | Planning, rapports de chantier |
-| Achats et approvisionnement | Service achats | Consulter les fournisseurs, passer les commandes, relancer pour les délais | Demandes d'offre, bons de commande, confirmations |
-| Comptabilité et paiements | Comptable | Assurer la comptabilité, gérer les paiements et les relances clients | Factures, relevés |
+## Commandes
+```bash
+npm run prisma:generate
+npm run prisma:migrate
+npm run prisma:seed
+npm run dev
+```
 
+## Comment visualiser l'application ?
+1. Démarrer le serveur de dev avec `npm run dev`.
+2. Ouvrir `http://localhost:3000`.
+3. Se connecter via `/login` avec les comptes de démonstration (ci-dessous).
+
+Tests :
+```bash
+npm run test
+```
+
+## Comptes de démonstration (seed)
+- Direction : `direction@gmail.com` / `direction`
+- Professeur : `professeur@gmail.com` / `professeur`
+> Astuce : si le seed n'a pas été exécuté, ces comptes sont créés automatiquement lors de la première connexion.
+
+## Endpoints principaux
+### Admin
+- `GET/POST /api/admin/teachers`
+- `PUT/DELETE /api/admin/teachers/:id`
+- `GET/POST /api/admin/classes`
+- `GET/PUT/DELETE /api/admin/classes/:id`
+- `POST/DELETE /api/admin/assignments`
+- `GET/POST /api/admin/councils`
+- `GET/PUT/DELETE /api/admin/councils/:id`
+- `GET /api/admin/export?type=councils|teachers`
+
+### Prof
+- `GET /api/me/councils`
+- `POST /api/me/attendance`
+
+## CSV import classes
+Le CSV doit contenir **une seule colonne** : le nom de la classe. L’import est disponible sur `/admin/classes`.
+
+## Prochaines étapes
+- Notifications email/SMS
+- Quotas avancés par professeur
+- Import CSV complet (profs/classes/assignations)
+- Exports enrichis (présences par conseil détaillées)
