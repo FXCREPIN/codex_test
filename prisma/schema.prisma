@@ -1,0 +1,82 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  PROF
+}
+
+enum AttendanceStatus {
+  PENDING
+  PRESENT
+  ABSENT
+}
+
+model User {
+  id           String          @id @default(cuid())
+  email        String          @unique
+  passwordHash String
+  role         Role
+  createdAt    DateTime        @default(now())
+  teacherProfile TeacherProfile?
+  classLinks   ClassTeacher[]  @relation("TeacherClasses")
+  attendances  Attendance[]    @relation("TeacherAttendances")
+}
+
+model TeacherProfile {
+  id        String @id @default(cuid())
+  name      String
+  subjects  String?
+  userId    String @unique
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Class {
+  id          String         @id @default(cuid())
+  name        String         @unique
+  createdAt   DateTime       @default(now())
+  teachers    ClassTeacher[]
+  councils    Council[]
+}
+
+model ClassTeacher {
+  id        String @id @default(cuid())
+  classId   String
+  teacherId String
+  class     Class  @relation(fields: [classId], references: [id], onDelete: Cascade)
+  teacher   User   @relation("TeacherClasses", fields: [teacherId], references: [id], onDelete: Cascade)
+
+  @@unique([classId, teacherId])
+  @@index([teacherId])
+}
+
+model Council {
+  id        String      @id @default(cuid())
+  classId   String
+  startsAt  DateTime
+  location  String?
+  createdAt DateTime    @default(now())
+  class     Class       @relation(fields: [classId], references: [id], onDelete: Cascade)
+  attendances Attendance[]
+
+  @@index([classId, startsAt])
+}
+
+model Attendance {
+  id        String           @id @default(cuid())
+  councilId String
+  teacherId String
+  status    AttendanceStatus @default(PENDING)
+  updatedAt DateTime         @updatedAt
+  council   Council          @relation(fields: [councilId], references: [id], onDelete: Cascade)
+  teacher   User             @relation("TeacherAttendances", fields: [teacherId], references: [id], onDelete: Cascade)
+
+  @@unique([councilId, teacherId])
+  @@index([teacherId])
+}
